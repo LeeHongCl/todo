@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +42,7 @@ public class TodoController {
 			log.info("Log:dto => entity ok!");
 			
 			//entity userId를 임시로 지정한다.
-			entity.setUserId("temporary-userId");
+			entity.setUserId("temporary-user");
 			
 			//service.create 를 통해 repository 에 entity를 저장한다.
 			//이때 넘어오는 값이 없을 수도 있으므로 List가 아닌 Optional 로 한다.
@@ -74,5 +75,17 @@ public class TodoController {
 			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
+	}
+	
+	@GetMapping
+	public ResponseEntity<?>retrieveTodoList(){
+		String temporaryUserId = "temporary-user";
+		List<TodoEntity> entities = service.retrieve(temporaryUserId);
+		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+		
+		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+		
+		//HTTP Status 200 상태로 response 를 전송한다.
+		return ResponseEntity.ok().body(response);
 	}
 }
