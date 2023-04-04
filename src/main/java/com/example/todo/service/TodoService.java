@@ -60,6 +60,15 @@ public class TodoService {
 		return repository.findById(entity.getId());
 	}
 	
+	public String delete(final String id) {
+		if(repository.existsById(id)) {
+			repository.deleteById(id);
+		}else {
+			throw new RuntimeException("id dows not exist");
+		}
+		return "Deleted";
+	}
+	
 	public void validate(final TodoEntity entity) {
 		if(entity ==null) {
 			log.warn("Entity cannot be null.");
