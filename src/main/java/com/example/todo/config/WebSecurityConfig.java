@@ -30,9 +30,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.antMatchers("/","/auth/**").permitAll()
+			.antMatchers("/","/auth/**","/h2-console/**").permitAll()
 			.anyRequest()
-			.authenticated();
+			.authenticated()
+			.and()
+			.headers().frameOptions().disable();
 		
 		http.addFilterAfter(jwtAuthenticationFilter, CorsFilter.class);
 	}
